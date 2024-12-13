@@ -194,29 +194,16 @@ def main(args):
     IMAGE_SIZE = args['imgsz']
     
     train_dataset = create_train_dataset(
-        TRAIN_DIR_IMAGES, 
-        TRAIN_DIR_LABELS,
-        IMAGE_SIZE, 
-        CLASSES,
-        use_train_aug=args['use_train_aug'],
-        mosaic=args['mosaic'],
-        square_training=args['square_training']
+        TRAIN_DIR_IMAGES, TRAIN_DIR_LABELS, IMAGE_SIZE, CLASSES,
+        use_train_aug=args['use_train_aug'], mosaic=args['mosaic'], square_training=args['square_training']
     )
     valid_dataset = create_valid_dataset(
-        VALID_DIR_IMAGES, 
-        VALID_DIR_LABELS, 
-        IMAGE_SIZE, 
-        CLASSES,
-        square_training=args['square_training']
+        VALID_DIR_IMAGES, VALID_DIR_LABELS, IMAGE_SIZE, CLASSES, square_training=args['square_training']
     )
     print('Creating data loaders')
     if args['distributed']:
-        train_sampler = distributed.DistributedSampler(
-            train_dataset
-        )
-        valid_sampler = distributed.DistributedSampler(
-            valid_dataset, shuffle=False
-        )
+        train_sampler = distributed.DistributedSampler(train_dataset)
+        valid_sampler = distributed.DistributedSampler(valid_dataset, shuffle=False)
     else:
         train_sampler = RandomSampler(train_dataset)
         valid_sampler = SequentialSampler(valid_dataset)
@@ -240,12 +227,6 @@ def main(args):
     train_map_05 = []
     train_map = []
 
-    #val_loss_hist = Averager()
-    #val_loss_list = []
-    #loss_cls_list_val = []
-    #loss_box_reg_list_val = []
-    #loss_objectness_list_val = []
-    #loss_rpn_list_val = []
     val_loss_list_epoch = []
     val_map_05 = []
     val_map = []
